@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/pic1" />
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/abc_text_size_small_material"
+        android:text="@string/app_name" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/abc_button_padding_horizontal_material"
+        android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
+        android:paddingRight="@dimen/abc_button_padding_horizontal_material">
+
+        <include layout="@layout/photo_item_meta" />
+    </RelativeLayout>
+</LinearLayout>

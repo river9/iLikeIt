@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:gravity="center">
+
+        <com.github.siyamed.shapeimageview.CircularImageView
+            android:id="@+id/ivAuthor"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/pic1" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/abc_text_size_menu_material" />
+
+        <TextView
+            android:id="@+id/tvState"
+            android:layout_below="@+id/tvAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textSize="@dimen/abc_text_size_small_material" />
+    </RelativeLayout>
+</LinearLayout>
