@@ -10,12 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.river.ilikeit.Constant;
+import com.river.ilikeit.Constants;
 import com.river.ilikeit.R;
 import com.river.ilikeit.Utility;
 import com.river.ilikeit.main.dummy.DummyContent;
 import com.river.ilikeit.main.photo.PhotoInfo;
-import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -69,7 +68,7 @@ public class PhotoSectionsPagerAdapter extends FragmentPagerAdapter {
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(Constant.ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
@@ -83,7 +82,7 @@ public class PhotoSectionsPagerAdapter extends FragmentPagerAdapter {
             if (savedInstanceState == null) {
                 savedInstanceState = getArguments();
             }
-            photo = DummyContent.ITEMS.get(savedInstanceState.getInt(Constant.ARG_SECTION_NUMBER));
+            photo = DummyContent.ITEMS.get(savedInstanceState.getInt(Constants.ARG_SECTION_NUMBER));
         }
 
         @Override

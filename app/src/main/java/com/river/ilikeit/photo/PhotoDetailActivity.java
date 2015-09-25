@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.river.ilikeit.Constant;
+import com.river.ilikeit.Constants;
 import com.river.ilikeit.R;
 
 public class PhotoDetailActivity extends AppCompatActivity {
@@ -29,7 +29,7 @@ public class PhotoDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             savedInstanceState = getIntent().getExtras();
         }
-        mViewPager.setCurrentItem(savedInstanceState.getInt(Constant.ARG_SECTION_NUMBER));
+        mViewPager.setCurrentItem(savedInstanceState.getInt(Constants.ARG_SECTION_NUMBER));
     }
 
 

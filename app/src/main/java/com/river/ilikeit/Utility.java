@@ -1,5 +1,6 @@
 package com.river.ilikeit;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.widget.ImageView;
 
@@ -49,6 +50,17 @@ public class Utility {
                 .placeholder(R.color.primary_dark_material_light)
                 .error(R.drawable.pic1)
                 .into(imageView);
+    }
+
+    public boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        String className = serviceClass.getName();
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (className.equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static String ACCESS_TOKEN = "AecaPzoHfORIHsPcbvrvnAeio2akFASl_yFyUhZCfLKhoAAEegAAAAA";

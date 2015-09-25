@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.river.ilikeit.Constant;
+import com.river.ilikeit.Constants;
 import com.river.ilikeit.R;
 import com.river.ilikeit.Utility;
 import com.river.ilikeit.photo.PhotoDetailActivity;
@@ -55,7 +55,7 @@ public class PhotosFragmentAdapter extends RecyclerView.Adapter<PhotoViewHolder>
         @Override
         public void onClick(View v) {
             Bundle args = new Bundle();
-            args.putInt(Constant.ARG_SECTION_NUMBER, position);
+            args.putInt(Constants.ARG_SECTION_NUMBER, position);
 
             Intent intent = new Intent(context, PhotoDetailActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
