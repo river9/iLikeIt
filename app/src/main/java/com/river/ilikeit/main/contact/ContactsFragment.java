@@ -3,19 +3,24 @@ package com.river.ilikeit.main.contact;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.river.ilikeit.R;
+import com.river.ilikeit.chat.ChatServiceManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsFragment extends Fragment {
+    private final String TAG = getClass().getSimpleName();
 
+    private List<ContactInfo> contactList = new ArrayList<>();
     private ContactsFragmentAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
@@ -30,7 +35,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new ContactsFragmentAdapter(createContactList());
+        getContactList();
+        mAdapter = new ContactsFragmentAdapter(contactList);
     }
 
     @Override
@@ -65,6 +71,19 @@ public class ContactsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public List<ContactInfo> getContactList() {
+        Log.i(TAG, "Connecting to service");
+
+        try {
+            ChatServiceManager.getInstance(this.getActivity()).getRemoteService().getRosters();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        contactList = createContactList();
+        return contactList;
     }
 
     /**

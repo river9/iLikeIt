@@ -1,6 +1,8 @@
 package com.river.ilikeit.main.photo;
 
-public class PhotoInfo {
+import android.util.Log;
+
+public class PhotoInfo implements PhotoInterface{
     public String id;
     public String content;
     public String link;
@@ -24,7 +26,7 @@ public class PhotoInfo {
     }
 
     @Override
-    public String toString() {
-        return content;
+    public void loadTest() {
+        Log.i(this.getClass().getSimpleName(), "loadTest content: " + content);
     }
 }

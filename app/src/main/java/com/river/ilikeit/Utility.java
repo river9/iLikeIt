@@ -1,6 +1,8 @@
 package com.river.ilikeit;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.ImageView;
 
@@ -113,5 +115,22 @@ public class Utility {
             list.add(item);
         }
         return list;
+    }
+
+    public static ProgressDialog initLoadingDialog(Context context) {
+        ProgressDialog loadingDialog = new ProgressDialog(context);
+        loadingDialog.setTitle("Loading");
+        loadingDialog.setMessage("Please wait ...");
+        loadingDialog.setCanceledOnTouchOutside(false);
+        return loadingDialog;
+    }
+
+    public static AlertDialog initErrorDialog(Context context, String error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Error");
+        if (error != null) {
+            builder.setMessage(error);
+        }
+        return builder.create();
     }
 }

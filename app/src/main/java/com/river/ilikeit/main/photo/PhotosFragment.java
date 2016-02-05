@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,16 +39,16 @@ public class PhotosFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Log.i("RIVER", Utility.requestPin());
-//                } catch (URISyntaxException | IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Utility.requestPin();
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 //        mAdapter = new ArrayAdapter<>(getActivity(), R.layout.photo_item, R.id.tvContent, DummyContent.ITEMS);
         mAdapter = new PhotosFragmentAdapter(getActivity().getApplicationContext(), DummyContent.ITEMS);
     }

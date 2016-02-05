@@ -1,11 +1,11 @@
 package com.river.ilikeit.chat.listener;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
-import com.river.ilikeit.MainActivity;
-import com.river.ilikeit.chat.ChatService;
+import com.river.ilikeit.Constants;
+import com.river.ilikeit.main.BroadcastHelper;
 
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -13,6 +13,7 @@ public class ConnectionListener implements org.jivesoftware.smack.ConnectionList
     private final String TAG = this.getClass().getSimpleName();
 
     private Context context;
+    private Bundle data;
 
     public ConnectionListener(Context context) {
         this.context = context;
@@ -20,42 +21,65 @@ public class ConnectionListener implements org.jivesoftware.smack.ConnectionList
 
     @Override
     public void connected(XMPPConnection connection) {
-        Log.i(TAG, "connected");
+        Log.d(TAG, "connected");
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_CONNECTED);
+        broadcastConnectionState(data);
     }
 
     @Override
     public void authenticated(XMPPConnection connection, boolean resumed) {
-        Log.i(TAG, "authenticated resumed: " + resumed);
-        Log.i(TAG, "authenticated context: " + (context != null));
-
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        ChatService.getRosters();
+        Log.d(TAG, "authenticated resumed: " + resumed);
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_AUTHENTICATED);
+        data.putBoolean(Constants.CONNECTION_RESUMED, resumed);
+        broadcastConnectionState(data);
     }
 
     @Override
     public void connectionClosed() {
-        Log.i(TAG, "connectionClosed");
+        Log.d(TAG, "connectionClosed");
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_CONNECTION_CLOSED);
+        broadcastConnectionState(data);
     }
 
     @Override
     public void connectionClosedOnError(Exception e) {
-        Log.i(TAG, "connectionClosedOnError: " + e.toString());
+        Log.d(TAG, "connectionClosedOnError: " + e.toString());
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_CONNECTION_CLOSED_ON_ERROR);
+        data.putString(Constants.CONNECTION_ERROR, e.toString());
+        broadcastConnectionState(data);
     }
 
     @Override
     public void reconnectionSuccessful() {
-        Log.i(TAG, "reconnectionSuccessful");
+        Log.d(TAG, "reconnectionSuccessful");
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_RECONNECTION_SUCCESSFUL);
+        broadcastConnectionState(data);
     }
 
     @Override
     public void reconnectingIn(int seconds) {
-        Log.i(TAG, "reconnectingIn: " + seconds);
+        Log.d(TAG, "reconnectingIn: " + seconds);
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_RECONNECTING_IN);
+        data.putInt(Constants.CONNECTION_RECONNECTING, seconds);
+        broadcastConnectionState(data);
     }
 
     @Override
     public void reconnectionFailed(Exception e) {
-        Log.i(TAG, "reconnectionFailed: " + e.toString());
+        Log.d(TAG, "reconnectionFailed: " + e.toString());
+        data = new Bundle();
+        data.putInt(Constants.CONNECTION_STATE, Constants.STATE_RECONNECTION_FAILED);
+        data.putString(Constants.CONNECTION_ERROR, e.toString());
+        broadcastConnectionState(data);
+    }
+    
+    private void broadcastConnectionState(Bundle data) {
+        BroadcastHelper.getInstance().sendBroadcast(context, Constants.BRC_XMPP_CONNECTION_STATE, data);
     }
 }

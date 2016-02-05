@@ -1,15 +1,18 @@
 package com.river.ilikeit;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.river.ilikeit.main.contact.ContactsFragment;
+import com.river.ilikeit.chat.ChatServiceManager;
 import com.river.ilikeit.main.MainSectionsPagerAdapter;
+import com.river.ilikeit.main.contact.ContactsFragment;
 
 public class MainActivity extends AppCompatActivity implements ContactsFragment.OnFragmentInteractionListener {
 
@@ -40,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mMainSectionsPagerAdapter);
-
     }
 
 
@@ -53,21 +55,40 @@ public class MainActivity extends AppCompatActivity implements ContactsFragment.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                testSendMSG();
+                break;
+            case R.id.action_logout:
+                logout();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onContactFragmentInteraction(Uri uri) {
+    }
 
+    private void logout() {
+        try {
+            ChatServiceManager.getInstance(this).getRemoteService().logout();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        Intent intentLogin = new Intent(this, SplashActivity.class);
+        intentLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intentLogin);
+    }
+
+    private void testSendMSG() {
+        try {
+//                String to = "1pn37r05x8ey508k3i9vh2tbsg@public.talk.google.com";
+            String to = "hoanggiang262@gmail.com";
+            ChatServiceManager.getInstance(this).getRemoteService().sendMessage(to, "Test 123");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -10,6 +10,8 @@ public class ChatManagerListener implements org.jivesoftware.smack.chat.ChatMana
     @Override
     public void chatCreated(Chat chat, boolean createdLocally) {
         Log.i(TAG, "chatCreated createdLocally: " + createdLocally);
-        chat.addMessageListener(new ChatMessageListener());
+        if (chat.getListeners() == null) {
+            chat.addMessageListener(new ChatMessageListener());
+        }
     }
 }
