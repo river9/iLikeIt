@@ -10,6 +10,7 @@ public class AppPreferences {
 
     private String username;
     private String password;
+    private String contacts;
 
     private static AppPreferences instance;
 
@@ -44,6 +45,16 @@ public class AppPreferences {
     public void setPassword(String password) {
         this.password = password;
         editor.putString(Constants.PASSWORD, password);
+        editor.commit();
+    }
+
+    public String getContacts() {
+        return sharedPref.getString(Constants.CONTACTS, null);
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+        editor.putString(Constants.CONTACTS, contacts);
         editor.commit();
     }
 }

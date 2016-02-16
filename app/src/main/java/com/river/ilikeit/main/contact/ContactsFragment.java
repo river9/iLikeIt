@@ -1,18 +1,29 @@
 package com.river.ilikeit.main.contact;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.river.ilikeit.AppPreferences;
+import com.river.ilikeit.Constants;
 import com.river.ilikeit.R;
-import com.river.ilikeit.chat.ChatServiceManager;
+import com.river.ilikeit.main.BroadcastHelper;
+
+import org.jivesoftware.smack.util.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +35,6 @@ public class ContactsFragment extends Fragment {
     private ContactsFragmentAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
-
     public static ContactsFragment newInstance() {
         return new ContactsFragment();
     }
@@ -35,8 +45,10 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getContactList();
         mAdapter = new ContactsFragmentAdapter(contactList);
+        BroadcastHelper.getInstance().registerReceiver(this.getActivity(),
+                receiverRosterLoaded, Constants.BRC_ROSTER_LOADED, null);
+        new TaskRefreshContactList().execute();
     }
 
     @Override
@@ -46,6 +58,12 @@ public class ContactsFragment extends Fragment {
         // Set the adapter
         ListView listView = (ListView) view.findViewById(R.id.lvContacts);
         listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
         return view;
     }
 
@@ -73,17 +91,11 @@ public class ContactsFragment extends Fragment {
         mListener = null;
     }
 
-    public List<ContactInfo> getContactList() {
-        Log.i(TAG, "Connecting to service");
-
-        try {
-            ChatServiceManager.getInstance(this.getActivity()).getRemoteService().getRosters();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        contactList = createContactList();
-        return contactList;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BroadcastHelper.getInstance().unregisterReceiver(this.getActivity(),
+                receiverRosterLoaded);
     }
 
     /**
@@ -98,39 +110,43 @@ public class ContactsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onContactFragmentInteraction(Uri uri);
+        void onContactFragmentInteraction(Uri uri);
     }
+    
+    private BroadcastReceiver receiverRosterLoaded = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new TaskRefreshContactList().execute();
+        }
+    };
 
-    private List<ContactInfo> createContactList() {
-        List<ContactInfo> list = new ArrayList<>();
-        list.add(new ContactInfo("Test 1", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 2", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 3", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 4", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 5", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 6", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 7", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 1", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 2", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 3", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 4", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 5", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 6", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 7", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 1", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 2", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 3", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 4", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 5", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 6", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 7", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 1", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 2", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 3", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 4", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 5", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 6", "eeeeeeeeeee", "ddddddddddddd"));
-        list.add(new ContactInfo("Test 7", "eeeeeeeeeee", "ddddddddddddd"));
-        return list;
+    private class TaskRefreshContactList extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String strContacts = AppPreferences.getInstance(ContactsFragment.this.getActivity()).getContacts();
+            Log.d(TAG, "TaskRefreshContactList: " + strContacts);
+            if (StringUtils.isNotEmpty(strContacts)) {
+                try {
+                    JSONArray array = new JSONArray(strContacts);
+                    contactList.clear();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = (JSONObject) array.get(i);
+                        ContactInfo contact = new ContactInfo(obj.getString(Constants.JID), obj.getString(Constants.NAME));
+                        contactList.add(contact);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d(TAG, "TaskRefreshContactList contactList.size: " + contactList.size());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

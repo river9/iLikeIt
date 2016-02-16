@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.river.ilikeit.R;
 import com.river.ilikeit.Utility;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,20 +48,23 @@ public class ContactsFragmentAdapter extends BaseAdapter {
         }
 
         ContactInfo contact = contacts.get(position);
-        holder.tvAuthor.setText(contact.name);
-        Utility.getInstance(parent.getContext()).displayImage(holder.ivPhoto, contact.photoUrl);
+        holder.tvName.setText(contact.name);
+        holder.tvStatus.setText(contact.jid);
+        Utility.getInstance(parent.getContext()).displayImage(holder.ivPhoto, "ss");
 
         return convertView;
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvAuthor;
+        public TextView tvName;
+        public TextView tvStatus;
         public CircularImageView ivPhoto;
 
         public ContactViewHolder(View view) {
             super(view);
-            tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
-            ivPhoto = (CircularImageView) view.findViewById(R.id.ivAuthor);
+            tvName = (TextView) view.findViewById(R.id.tvName);
+            tvStatus = (TextView) view.findViewById(R.id.tvStatus);
+            ivPhoto = (CircularImageView) view.findViewById(R.id.ivPhoto);
         }
     }
 }

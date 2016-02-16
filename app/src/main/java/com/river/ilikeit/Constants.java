@@ -8,6 +8,7 @@ public class Constants {
 
     public static final String ARG_SECTION_NUMBER = "section_number";
 
+    public static final String BRC_ROSTER_LOADED = "BRC_ROSTER_LOADED";
     public static final String BRC_XMPP_CONNECTION_STATE = "BRC_XMPP_CONNECTION_STATE";
 
     public static final String CONNECTION_STATE = "CONNECTION_STATE";
@@ -24,4 +25,8 @@ public class Constants {
     public static final int STATE_RECONNECTION_FAILED = 7;
     public static final int STATE_CONNECT_ERROR = 8;
     public static final int STATE_AUTHENTICATE_ERROR = 9;
+
+    public static final String CONTACTS = "CONTACTS";
+    public static final String JID = "jid";
+    public static final String NAME = "name";
 }

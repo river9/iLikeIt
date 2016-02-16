@@ -70,7 +70,7 @@ public class XMPPController {
                 .setServiceName(XMPPConfiguration.SERVICENAME)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.required)
                 .setConnectTimeout(3000)
-                .setSendPresence(true)
+                .setSendPresence(false)
                 .setDebuggerEnabled(true);
 
         xmppConfig = configBuilder.build();
@@ -88,7 +88,8 @@ public class XMPPController {
 
         roster = Roster.getInstanceFor(connection);
         roster.addRosterListener(new RosterListener());
-        roster.addRosterLoadedListener(new RosterLoadedListener());
+        roster.addRosterLoadedListener(new RosterLoadedListener(context));
+        roster.setRosterLoadedAtLogin(true);
 
         pingManager = PingManager.getInstanceFor(connection);
         pingManager.setPingInterval(30);
