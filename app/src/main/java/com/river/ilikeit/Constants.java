@@ -3,6 +3,11 @@ package com.river.ilikeit;
 public class Constants {
 
     public static final String SHARED_PREFS_FILE_NAME = "my_app_shared_prefs";
+
+    public static final String ACCESS_TOKEN = "AecaPzoHfORIHsPcbvrvnAeio2akFASl_yFyUhZCfLKhoAAEegAAAAA";
+    public static final String URL_BOARD = "https://api.pinterest.com/v1/boards/280560320475343984/pins/?access_token=" + ACCESS_TOKEN;
+    public static final String URL_TRAVEL = "https://api.pinterest.com/v3/pidgets/boards/highquality/travel/pins/";
+
     public static final String USERNAME = "USERNAME";
     public static final String PASSWORD = "PASSWORD";
 

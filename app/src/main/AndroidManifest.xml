@@ -29,11 +29,6 @@
         <service
             android:name=".chat.ChatService"
             android:enabled="true" />
-
-        <activity
-            android:name=".ChatActivity"
-            android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
